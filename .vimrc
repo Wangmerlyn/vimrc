@@ -47,15 +47,18 @@ Plug 'vim-airline/vim-airline'
 Plug 'connorholyday/vim-snazzy'
 Plug 'scrooloose/nerdtree'
 Plug 'Valloric/YouCompleteMe'
-Plug 'Andr3as/Codiad-MarkdownPreview'
+Plug 'iamcco/markdown-preview.vim'
+Plug 'dhruvasagar/vim-table-mode'
 call plug#end()
 let g:SnazzyTransparent = 1
 colorscheme pablo 
 let g:SnazzyTransparent = 1
-
+" ===Nerdtree
 map tt  :NERDTreeToggle<CR>
 map op :custom open<CR>
 
 nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
-let g:mkdp_browser='FireFox'
+nmap <silent> opm <Plug>MarkdownPreview
+nmap <silent> cpm  <Plug>StopMarkdownPreview
+map <LEADER>tm :TableModeToggle<CR>
