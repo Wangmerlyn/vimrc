@@ -1,6 +1,7 @@
 let mapleader =" "
 syntax on
 set number
+set relativenumber
 set cursorline
 set wrap
 set showcmd
@@ -14,15 +15,19 @@ map S :w<CR>
 map Q :q<CR>
 noremap n nzz
 noremap N Nzz
-map sl :set splitright<CR>:vsplit<CR>
-map sh :set nosplitright<CR>:vsplit<CR>
-map sj :set splitbelow<CR>:split<CR>
-map sk :set nosplitbelow<CR>:split<CR>
+inoremap ' ''<ESC>i
+inoremap " ""<ESC>i
+inoremap ( ()<ESC>i
+inoremap [ []<ESC>i
+inoremap { {<CR>}<ESC>O
+map ql :set splitright<CR> :vsplit<CR>
+map qh :set nosplitright<CR> :vsplit<CR>
+map qj :set splitbelow<CR> :split<CR>
+map qk :set nosplitbelow<CR> :split<CR>
 
 map<LEADER>j <C-w>j
 map<LEADER>k <C-w>k
-map<LEADER>h <C-w>h
-
+map<LEADER>h <C-w>h 
 map<LEADER>l <C-w>l
 
 map<LEADER><up> :res +5<CR>
@@ -59,6 +64,6 @@ map op :custom open<CR>
 
 nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
-nmap <silent> opm <Plug>MarkdownPreview
+nmap <silent> pm <Plug>MarkdownPreview
 nmap <silent> cpm  <Plug>StopMarkdownPreview
 map <LEADER>tm :TableModeToggle<CR>
