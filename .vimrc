@@ -1,7 +1,15 @@
 set nocompatible " be iMproved, required
-filetype off " required
+"set clipboard=unnamedplus
+filetype  on" "required
+filetype plugin on
+
+if &compatible
+	set nocompatible
+endif
+
 let mapleader = " "
 syntax on
+syntax enable
 set number
 set cursorline
 set wrap
@@ -11,17 +19,21 @@ set hlsearch
 set incsearch
 set ignorecase
 set smartcase
+set termguicolors
 set foldmethod=syntax
 noremap <LEADER>n :nohlsearch<CR>
 map S :w<CR>
 map Q :q<CR>
 noremap n nzz
 noremap N Nzz
-inoremap ' ''<ESC>i
-inoremap " ""<ESC>i
-inoremap ( ()<ESC>i
-inoremap [ []<ESC>i
-inoremap { {<CR>}<ESC>O
+noremap <c-j> 5j
+noremap <c-k> 5k
+
+"inoremap ' ''<ESC>i
+"inoremap " ""<ESC>i
+"inoremap ( ()<ESC>i
+"inoremap [ []<ESC>i
+"inoremap { {<CR>}<ESC>O
 map ql :set splitright<CR> :vsplit<CR>
 map qh :set nosplitright<CR> :vsplit<CR>
 map qj :set splitbelow<CR> :split<CR>
@@ -52,64 +64,54 @@ let &t_SI = "\<ESC>]50;CursorShape=1\x7"
 let &t_SR = "\<ESC>]50;CursorShape=2\x7"
 let &t_EI = "\<ESC>]50;CursorShape=0\x7"
 
+hi NonText ctermbg = NONE
+hi Normal guibg = NONE ctermbg =NONE
+
+vnoremap Y "+y
+noremap P "+p
+
 let laststatus = 1
+let g:SnazzyTransparent = 1
 call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'connorholyday/vim-snazzy'
 Plug 'scrooloose/nerdtree'
 Plug 'Valloric/YouCompleteMe'
-Plug 'iamcco/markdown-preview.vim'
+"Plug 'iamcco/markdown-preview.vim'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+"Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+"Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+Plug 'iamcco/mathjax-support-for-mkdp'
+Plug 'iamcco/markdown-preview.vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 call plug#end()
+" ===Snazzy
+"colorscheme koehler
 let g:SnazzyTransparent = 1
-colorscheme koehler
+colorscheme snazzy
 let g:SnazzyTransparent = 1
-" Compatible with ranger 1.4.2 through 1.7.*
-"
-" Add ranger as a file chooser in vim
-"
-" If you add this code to the .vimrc, ranger can be started using the command
-" ":RangerChooser" or the keybinding "<leader>r".  Once you select one or more
-" files, press enter and ranger will quit again and vim will open the selected
-" files.
-
-function! RangeChooser()
-    let temp = tempname()
-    " The option "--choosefiles" was added in ranger 1.5.1. Use the next line
-    " with ranger 1.4.2 through 1.5.0 instead.
-    "exec 'silent !ranger --choosefile=' . shellescape(temp)
-    if has("gui_running")
-        exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
-    else
-        exec 'silent !ranger --choosefiles=' . shellescape(temp)
-    endif
-    if !filereadable(temp)
-        redraw!
-        " Nothing to read.
-        return
-    endif
-    let names = readfile(temp)
-    if empty(names)
-        redraw!
-        " Nothing to open.
-        return
-    endif
-    " Edit the first item.
-    exec 'edit ' . fnameescape(names[0])
-    " Add any remaning items to the arg list/buffer list.
-    for name in names[1:]
-        exec 'argadd ' . fnameescape(name)
-    endfor
-    redraw!
-endfunction
-command! -bar RangerChooser call RangeChooser()
-nnoremap <leader>r :<C-U>RangerChooser<CR>
-
+let g:lightline = {
+\'colorscheme':'snazzy',
+\}
 " ===Nerdtree
 map tt  :NERDTreeToggle<CR>
-map op :custom open<CR>
+" ===Xuyuanp/nerdtree-git-plugin
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+
 " ===YcmCompleter
 nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
@@ -117,24 +119,11 @@ nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nmap <silent> mp <Plug>MarkdownPreview
 nmap <silent> cpm  <Plug>StopMarkdownPreview
 map <LEADER>tm :TableModeToggle<CR>
-filetype plugin on
-"Uncomment to override defaults:
-"let g:instant_markdown_slow = 1
-"let g:instant_markdown_autostart = 0
-"let g:instant_markdown_open_to_the_world = 1
-"let g:instant_markdown_allow_unsafe_content = 1
-"let g:instant_markdown_allow_external_content = 1
-"let g:instant_markdown_mathjax = 1
-"let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
-"let g:instant_markdown_autoscroll = 0
-"let g:instant_markdown_port = 8888
-"let g:instant_markdown_python = 1
-
 " ===UltiSnips
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-x>"
-let g:UltiSnipsJumpForwardTrigger="<c-c>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsExpandTrigger="<c-d>"
+let g:UltiSnipsJumpForwardTrigger="<c-f>"
+let g:UltiSnipsJumpBackwardTrigger="<c-s>"
 
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
